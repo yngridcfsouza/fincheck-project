@@ -1,6 +1,14 @@
+import { AuthProvider } from "./app/contexts/AuthContext";
+import { Router } from "./Router";
+
+import { Toaster } from "react-hot-toast"
 
 export default function App() {
   return (
-    <h1 className="">Hello, world</h1>
+    <AuthProvider>
+      <Router />
+
+      <Toaster />
+    </AuthProvider>
   )
 }
