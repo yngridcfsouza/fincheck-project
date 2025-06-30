@@ -1,5 +1,3 @@
-import { ChevronDownIcon } from "@radix-ui/react-icons";
-import { TransactionsIcon } from "../../../../components/icons/TransactionsIcon";
 import { FilterIcon } from "../../../../components/icons/FilterIcon";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { MONTHS } from "../../../../../app/config/constants";
@@ -12,14 +10,25 @@ import { useTransactionsController } from "./useTransactionsController";
 import { Spinner } from "../../../../components/Spinner";
 
 import emptyState from "../../../../../assets/emptyState.svg";
+import { TransactionTypeDropdown } from "./TransactionTypeDropdown";
+import { FiltersModal } from "./FiltersModal";
 
 export function Transactions() {
-  const { areValuesVisible, isLoading, isInitialLoading, transactions } = useTransactionsController();
+  const {
+    areValuesVisible,
+    isLoading,
+    isInitialLoading,
+    transactions,
+    handleCloseFiltersModal,
+    handleOpenFiltersModal,
+    isFiltersModalOpen,
+  } = useTransactionsController();
 
   const hasTransactions = transactions.length > 0;
 
   return(
     <div className="bg-gray-100 rounded-2xl w-full h-full px-4 py-8 md:p-10 flex flex-col">
+
       {isInitialLoading && (
         <div className='w-full h-full flex items-center justify-center'>
           <Spinner className="w-10 h-10"/>
@@ -28,17 +37,16 @@ export function Transactions() {
 
       {!isInitialLoading && (
         <>
+          <FiltersModal
+            open={isFiltersModalOpen}
+            onClose={handleCloseFiltersModal}
+          />
+
           <header>
             <div className="flex items-center justify-between">
-              <button className="flex items-center gap-2">
-                <TransactionsIcon />
+              <TransactionTypeDropdown />
 
-                <span className="text-sm text-gray-800 tracking-[-0.5px] font-medium">Transações</span>
-
-                <ChevronDownIcon className="text-gray-900"/>
-              </button>
-
-              <button>
+              <button onClick={handleOpenFiltersModal}>
                 <FilterIcon />
               </button>
             </div>
