@@ -19,7 +19,7 @@ export function DatePicker({ value, onChange }: DatePickerProps) {
         // Container geral
         root: "flex",
         months: "flex flex-col relative",
-        month_caption: " flex items-center mb-4",
+        month_caption: "flex items-center mb-4",
         caption_label: "relative left-0 text-lg font-semibold text-gray-700 mx-1",
 
         nav: "absolute right-0 flex items-center",

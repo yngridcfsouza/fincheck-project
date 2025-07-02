@@ -12,12 +12,18 @@ interface SelectProps {
     value: string;
     label: string;
   }[];
+  onChange(value: string): void;
+  value?: string;
 }
 
-export function Select({ error, options, placeholder}: SelectProps) {
+export function Select({ error, options, placeholder, value, onChange}: SelectProps) {
+  function handleSelect(value: string) {
+    onChange?.(value);
+  }
+
   return(
     <div>
-      <RdxSelect.Root>
+      <RdxSelect.Root value={value} onValueChange={handleSelect}>
         <RdxSelect.Trigger
           className={cn(
             "bg-white w-full rounded-lg border border-gray-500 px-3 h-[52px] text-gray-800 focus:border-gray-800 transaction-all outline-none text-left relative",
@@ -36,7 +42,7 @@ export function Select({ error, options, placeholder}: SelectProps) {
             <RdxSelect.Viewport className="p-2">
               {options.map(option => (
                 <RdxSelect.Item
-                  className="text-gray-800 text-sm outline-none data-[state=checked]:font-bold data-[highlighted]:bg-gray-50 rounded-lg transition-colors p-2"
+                  className="text-gray-800 p-4 text-sm outline-none data-[state=checked]:font-bold data-[highlighted]:bg-gray-50 rounded-lg transition-colors"
                   value={option.value}
                   key={option.value}
                 >

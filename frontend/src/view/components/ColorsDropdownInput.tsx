@@ -5,8 +5,10 @@ import { ColorIcon } from "./icons/ColorIcon";
 import { useState } from "react";
 
 interface ColorsDropdownInputProps {
-  error?: boolean;
+  error?: string;
   className?: string;
+  onChange(value: string): void;
+  value?: string;
 }
 
 type Color = {
@@ -31,10 +33,18 @@ const colors: Color[] = [
 ];
 
 
-export function ColorsDropdownInput({ error, className }: ColorsDropdownInputProps) {
-  const [selectedColor, setSelectedColor] = useState<null | Color>(null);
+export function ColorsDropdownInput({ error, className, onChange, value }: ColorsDropdownInputProps) {
+  const [selectedColor, setSelectedColor] = useState<null | Color>(() => {
+    if (!value) {
+      return null;
+    }
+
+    return colors.find(c => c.color === value) ?? null;
+  });
+
   function handleSelectColor(color: Color) {
     setSelectedColor(color);
+    onChange?.(color.color);
   }
 
   return(
@@ -49,9 +59,9 @@ export function ColorsDropdownInput({ error, className }: ColorsDropdownInputPro
             )}
           >
             Cor
-            <div  className="absolute right-3 top-1/2 -translate-y-1/2">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2">
               {!selectedColor ?
-              (<ChevronDownIcon className="w-6 h-6 text-gray-800 absolute right-3 top-1/2 -translate-y-1/2"/>) :
+              (<ChevronDownIcon className="w-6 h-6 text-gray-800 right-0 absolute top-1/2 -translate-y-1/2"/>) :
               (<ColorIcon color={selectedColor.color} bg={selectedColor.bg}/>)
               }
             </div>
