@@ -33,7 +33,7 @@ function DropdownMenuContent({children, className}: DropdownMenuContentProps) {
     <RdxDropdownMenu.Portal>
       <RdxDropdownMenu.Content
         className={cn(
-          "rounded-2xl p-2 bg-white space-y-2 z-50 shadow-[0px_11px_20px_0px_rgba(0,0,0,0.10)] data-[state=open]:animate-fadeIn data-[state=closed]:animate-fadeOut",
+          "rounded-2xl p-2 bg-white space-y-2 z-[99] shadow-[0px_11px_20px_0px_rgba(0,0,0,0.10)] data-[state=open]:animate-fadeIn data-[state=closed]:animate-fadeOut",
           className,
         )}
       >

@@ -6,7 +6,7 @@ import { Expense } from "../../../../components/icons/categories/expense/Expense
 import { useDashboardContext } from "../DashboardContext/useDashboardContext";
 
 export function Fab() {
-  const { openNewAccountModal } = useDashboardContext();
+  const { openNewAccountModal, openNewTransactionModal } = useDashboardContext();
 
   return(
     <div className="fixed right-4 bottom-4 bg-teal-900 w-12 h-12 rounded-full flex items-center justify-center text-white">
@@ -20,12 +20,12 @@ export function Fab() {
             </button>
           </DropdownMenu.Trigger>
 
-          <DropdownMenu.Content className="w-[200px] flex flex-col justify-between">
-            <DropdownMenu.Item className="gap-2">
+          <DropdownMenu.Content className="w-[250px] flex flex-col justify-between">
+            <DropdownMenu.Item className="gap-2 flex " onSelect={() => openNewTransactionModal("EXPENSE")}>
               <Expense />
               Nova Despesa
             </DropdownMenu.Item>
-            <DropdownMenu.Item className="gap-2">
+            <DropdownMenu.Item className="gap-2" onSelect={() => openNewTransactionModal("INCOME")}>
               <Income/>
               Nova Receita
             </DropdownMenu.Item>
