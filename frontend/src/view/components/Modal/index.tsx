@@ -37,12 +37,12 @@ export function Modal({ open, children, title, rightAction, onClose }: ModalProp
           <header className="h-12 flex items-center justify-between text-gray-800">
             <button
               onClick={onClose}
-              className="flex items-center justify-center outline-none"
+              className="w-12 h-12 flex items-center justify-center outline-none"
             >
               <Cross2Icon className="w-6 h-6"/>
             </button>
 
-            <span className="text-lg tracking-[-1px] font-bold">
+            <span className="text-lg tracking-[-1px] font-bold text-center">
               {title}
             </span>
 
