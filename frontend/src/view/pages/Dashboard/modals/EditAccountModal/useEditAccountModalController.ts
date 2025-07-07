@@ -55,15 +55,6 @@ export function useEditAccountModalController() {
     },
   });
 
-  const {
-    isPending: isPendingDeleteAccount,
-    mutateAsync: removeAccount,
-  } = useMutation({
-    mutationFn: async (id: string) => {
-      return bankAccountsService.remove(id);
-    },
-  });
-
   const handleSubmit = hookFormSubmit(async (data) => {
     try {
       await updateAccount({
@@ -79,6 +70,17 @@ export function useEditAccountModalController() {
     } catch {
       toast.error("Erro ao editar a conta!")
     }
+  });
+
+  // Deleção de contas
+
+  const {
+    isPending: isPendingDeleteAccount,
+    mutateAsync: removeAccount,
+  } = useMutation({
+    mutationFn: async (id: string) => {
+      return bankAccountsService.remove(id);
+    },
   });
 
   function handleOpenDeleteModal() {

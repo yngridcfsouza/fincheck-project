@@ -13,6 +13,7 @@ import emptyState from "../../../../../assets/emptyState.svg";
 import { TransactionTypeDropdown } from "./TransactionTypeDropdown";
 import { FiltersModal } from "./FiltersModal";
 import { formatDate } from "../../../../../app/utils/formatDate";
+import { EditTransactionModal } from "../../modals/EditTransactionModal";
 
 export function Transactions() {
   const {
@@ -26,6 +27,10 @@ export function Transactions() {
     handleChangeFilters,
     filters,
     handleApplyFilters,
+    isEditModalOpen,
+    transactionBeingEdit,
+    handleOpenEditModal,
+    handleCloseEditModal,
   } = useTransactionsController();
 
   const hasTransactions = transactions.length > 0;
@@ -100,10 +105,20 @@ export function Transactions() {
 
             {(hasTransactions && !isLoading) && (
               <>
+                {transactionBeingEdit && (
+                  <EditTransactionModal
+                  open={isEditModalOpen}
+                  onClose={handleCloseEditModal}
+                  transaction={transactionBeingEdit}
+                />
+                )}
+
                 {transactions.map(transaction => (
                   <div
+                    role="button"
+                    onClick={() => handleOpenEditModal(transaction)}
                     key={transaction.id}
-                    className="bg-white p-4 rounded-2xl flex items-center justify-between gap-4"
+                    className="bg-white p-4 rounded-2xl flex items-center justify-between gap-4 cursor-pointer"
                   >
                     <div className="flex-1 flex items-center gap-3">
                       <CategoryIcon type={transaction.type === "INCOME" ? 'income' : 'expense'}/>

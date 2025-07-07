@@ -321,7 +321,6 @@ export default {
         },
 
       },
-
        keyframes: {
         fadeIn: {
           from: { opacity: "0" },
@@ -335,6 +334,9 @@ export default {
       animation: {
         fadeIn: "fadeIn 300ms ease-out",
         fadeOut: "fadeOut 300ms ease-in",
+      },
+      fontFamily: {
+        sans: ["DM Sans", "sans-serif"]
       },
     },
   },
