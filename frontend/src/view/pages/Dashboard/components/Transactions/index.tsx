@@ -12,6 +12,7 @@ import { Spinner } from "../../../../components/Spinner";
 import emptyState from "../../../../../assets/emptyState.svg";
 import { TransactionTypeDropdown } from "./TransactionTypeDropdown";
 import { FiltersModal } from "./FiltersModal";
+import { formatDate } from "../../../../../app/utils/formatDate";
 
 export function Transactions() {
   const {
@@ -22,6 +23,9 @@ export function Transactions() {
     handleCloseFiltersModal,
     handleOpenFiltersModal,
     isFiltersModalOpen,
+    handleChangeFilters,
+    filters,
+    handleApplyFilters,
   } = useTransactionsController();
 
   const hasTransactions = transactions.length > 0;
@@ -40,11 +44,15 @@ export function Transactions() {
           <FiltersModal
             open={isFiltersModalOpen}
             onClose={handleCloseFiltersModal}
+            onApplyFilters={handleApplyFilters}
           />
 
           <header>
             <div className="flex items-center justify-between">
-              <TransactionTypeDropdown />
+              <TransactionTypeDropdown
+                onSelect={handleChangeFilters("type")}
+                selectedType={filters.type}
+              />
 
               <button onClick={handleOpenFiltersModal}>
                 <FilterIcon />
@@ -55,6 +63,10 @@ export function Transactions() {
               <Swiper
                 slidesPerView={3}
                 centeredSlides
+                onSlideChange={swiper => {
+                  handleChangeFilters("month")(swiper.realIndex);
+                }}
+                initialSlide={filters.month}
               >
                 <SliderNavigation />
                 {MONTHS.map((month, index) => (
@@ -88,41 +100,33 @@ export function Transactions() {
 
             {(hasTransactions && !isLoading) && (
               <>
-                <div className="bg-white p-4 rounded-2xl flex items-center justify-between gap-4">
-                  <div className="flex-1 flex items-center gap-3">
-                    <CategoryIcon type="expense"/>
+                {transactions.map(transaction => (
+                  <div
+                    key={transaction.id}
+                    className="bg-white p-4 rounded-2xl flex items-center justify-between gap-4"
+                  >
+                    <div className="flex-1 flex items-center gap-3">
+                      <CategoryIcon type={transaction.type === "INCOME" ? 'income' : 'expense'}/>
 
-                    <div >
-                      <strong className="tracking-[-0.5px] font-bold block">Almoço</strong>
-                      <span className="text-sm text-gray-600 tracking-[-0.5px] font-medium">04/06/2025</span>
+                      <div >
+                        <strong className="tracking-[-0.5px] font-bold block">{transaction.name}</strong>
+                        <span className="text-sm text-gray-600 tracking-[-0.5px] font-medium">{formatDate(new Date(transaction.date))}</span>
+                      </div>
                     </div>
+
+                    <span className={cn(
+                      "tracking-[-0.5px] font-medium",
+                      transaction.type === "INCOME" ?
+                      "text-green-800" :
+                      "text-red-800",
+                      !areValuesVisible && "blur-sm"
+                    )}>
+                      {transaction.type === "INCOME" ?
+                      "+ " :
+                      "- "} {formatCurrency(transaction.value)}
+                    </span>
                   </div>
-
-                  <span className={cn(
-                    "text-red-800 tracking-[-0.5px] font-medium",
-                    !areValuesVisible && "blur-sm"
-                  )}>
-                    - {formatCurrency(123)}
-                  </span>
-                </div>
-
-                <div className="bg-white p-4 rounded-2xl flex items-center justify-between gap-4">
-                  <div className="flex-1 flex items-center gap-3">
-                    <CategoryIcon type="income"/>
-
-                    <div >
-                      <strong className="tracking-[-0.5px] font-bold block">Salário</strong>
-                      <span className="text-sm text-gray-600 tracking-[-0.5px] font-medium">05/06/2025</span>
-                    </div>
-                  </div>
-
-                  <span className={cn(
-                    "text-green-800 tracking-[-0.5px] font-medium",
-                    !areValuesVisible && "blur-sm"
-                  )}>
-                    + {formatCurrency(5400)}
-                  </span>
-                </div>
+                ))}
               </>
             )}
           </div>

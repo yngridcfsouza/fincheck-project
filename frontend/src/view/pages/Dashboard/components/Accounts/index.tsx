@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
+import 'swiper/swiper-bundle.css';
 
 import { EyeIcon } from "../../../../components/icons/EyeIcon";
 import { AccountCard } from "./AccountCard";
@@ -9,9 +9,11 @@ import { formatCurrency } from '../../../../../app/utils/formatCurrency';
 import { cn } from '../../../../../app/utils/cn';
 import { Spinner } from '../../../../components/Spinner';
 import { PlusIcon } from '@radix-ui/react-icons';
+import { useEffect, useState } from 'react';
 
 export function Accounts() {
-  const { sliderState,
+  const {
+    sliderState,
     setSliderState,
     windowWidth,
     areValuesVisible,
@@ -21,6 +23,19 @@ export function Accounts() {
     openNewAccountModal,
     currentBalance,
   } = useAccountsController();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [swiperInstance, setSwiperInstance] = useState<any>(null);
+
+  useEffect(() => {
+    if (swiperInstance) {
+      swiperInstance.update(); // força recalcular limites
+      setSliderState({
+        isBeginning: swiperInstance.isBeginning,
+        isEnd: swiperInstance.isEnd,
+      });
+  }
+  }, [accounts, swiperInstance, setSliderState]); // sempre que a lista de contas mudar
 
   return(
     <div className="bg-teal-900 rounded-2xl w-full h-full px-4 py-8 md:p-10 flex flex-col">
@@ -81,11 +96,12 @@ export function Accounts() {
                 <Swiper
                   spaceBetween={16}
                   slidesPerView={windowWidth >= 500 ? 2.1 : 1.2}
+                  onSwiper={setSwiperInstance}
                   onSlideChange={swiper => {
                     setSliderState({
                       isBeginning: swiper.isBeginning,
                       isEnd: swiper.isEnd,
-                    });
+                    })
                   }}
                 >
                   <div className="flex items-center justify-between mb-4" slot="container-start">
@@ -94,17 +110,18 @@ export function Accounts() {
                     <AccountsSliderNavigation
                       isBeginning={sliderState.isBeginning}
                       isEnd={sliderState.isEnd}
+                      swiper={swiperInstance}
                     />
                   </div>
 
-                  <div className="mt-4">
-                    {accounts.map(account => (
-                      <SwiperSlide key={account.id}>
-                        <AccountCard data={account}
-                        />
-                      </SwiperSlide>
-                    ))}
-                  </div>
+
+                  {accounts.map(account => (
+                    <SwiperSlide key={account.id}>
+                      <AccountCard data={account}
+                      />
+                    </SwiperSlide>
+                  ))}
+
                 </Swiper>
               </div>
             )}

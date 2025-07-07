@@ -43,7 +43,6 @@ export function NewAccountModal() {
                 />
               )}
             />
-
           </div>
         </div>
 

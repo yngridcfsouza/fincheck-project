@@ -42,7 +42,7 @@ export function useEditAccountModalController() {
     },
   });
 
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(true);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -55,17 +55,26 @@ export function useEditAccountModalController() {
     },
   });
 
+  const {
+    isPending: isPendingDeleteAccount,
+    mutateAsync: removeAccount,
+  } = useMutation({
+    mutationFn: async (id: string) => {
+      return bankAccountsService.remove(id);
+    },
+  });
+
   const handleSubmit = hookFormSubmit(async (data) => {
     try {
       await updateAccount({
         ...data,
         initialBalance: Number(data.initialBalance),
         id: accountBeingEdit!.id,
-        // non-null assertion: para garantir ao id que espera uma string afirmamos que não vai null
+        // non-null assertion: para garantir ao id que espera uma string, afirmamos que não vai ser null
       });
       queryClient.invalidateQueries({ queryKey: ["bankAccounts"]});
 
-      toast.success("A conta editada com sucesso!");
+      toast.success("A conta foi editada com sucesso!");
       closeEditAccountModal();
     } catch {
       toast.error("Erro ao editar a conta!")
@@ -80,9 +89,17 @@ export function useEditAccountModalController() {
     setIsDeleteModalOpen(false);
   }
 
-  function handleDeleteAccount() {
+  async function handleDeleteAccount() {
+    try {
+      await removeAccount(accountBeingEdit!.id);
+      queryClient.invalidateQueries({ queryKey: ["bankAccounts"]});
 
-  }
+      toast.success("A conta foi excluída com sucesso!");
+      closeEditAccountModal();
+    } catch {
+      toast.error("Erro ao exluir a conta!")
+    }
+  };
 
   return({
     isEditAccountModalOpen,
@@ -96,5 +113,6 @@ export function useEditAccountModalController() {
     handleOpenDeleteModal,
     isDeleteModalOpen,
     handleDeleteAccount,
+    isPendingDeleteAccount,
   });
 }
